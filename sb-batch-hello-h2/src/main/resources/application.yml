@@ -1,0 +1,8 @@
+spring:
+  main:
+    banner-mode: false
+  batch:
+    initialize-schema: always
+logging:
+  level:
+    root: warn

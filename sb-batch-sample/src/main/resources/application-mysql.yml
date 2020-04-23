@@ -1,0 +1,12 @@
+debug: false
+spring:
+  main:
+    banner-mode: off
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:33061/springbatch?useUnicode=true&useSSL=true&useCharacterEncoding=utf-8&serverTimezone=JST
+    username: user01
+    password: 123456
+    schema: classpath:/org/springframework/batch/core/schema-mysql.sql
+  batch:
+    initialize-schema: always

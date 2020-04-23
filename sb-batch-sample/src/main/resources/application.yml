@@ -1,0 +1,12 @@
+debug: false
+spring:
+  profiles:
+    active: @profile.active@
+  main:
+    banner-mode: off
+#  batch:
+#    job:
+#      names: s05EodJob
+logging:
+  level:
+    root: info
