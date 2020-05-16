@@ -7,20 +7,23 @@
         <module>sb-batch-hello-mysql</module>
         <module>sb-batch-sample</module>
     </modules>
+
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.2.6.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
+
     <groupId>com.github.eulerlcs.study.sb</groupId>
     <artifactId>study-sb-batch</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>${revision}</version>
     <packaging>pom</packaging>
     <name>study-sb-batch</name>
     <description>Spring Batch 批处理基础视频教程 @bilibili</description>
 
     <properties>
+        <revision>0.0.1</revision>
         <java.version>11</java.version>
     </properties>
 
@@ -57,11 +60,58 @@
         </dependency>
     </dependencies>
 
+    <profiles>
+        <profile>
+            <id>docker.io</id>
+            <properties>
+                <docker.url>docker.io</docker.url>
+                <docker.repo>eulerlcs</docker.repo>
+                <docker.allowInsecureRegistries>false</docker.allowInsecureRegistries>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>harbor.eulerlcs.io</id>
+            <properties>
+                <docker.url>harbor.eulerlcs.io</docker.url>
+                <docker.repo>${parent.artifactId}</docker.repo>
+                <docker.allowInsecureRegistries>true</docker.allowInsecureRegistries>
+            </properties>
+        </profile>
+    </profiles>
+
     <build>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>jib-maven-plugin</artifactId>
+                <version>2.1.0</version>
+                <configuration>
+                    <allowInsecureRegistries>${docker.allowInsecureRegistries}</allowInsecureRegistries>
+                    <!-- if use http, add a system property sendCredentialsOverHttp=true -->
+
+                    <from>
+                        <image>bellsoft/liberica-openjdk-alpine:11</image>
+                    </from>
+                    <to>
+                        <image>${docker.url}/${docker.repo}/${project.name}:${project.version}
+                        </image>
+                        <tags>
+                            <tag>latest</tag>
+                        </tags>
+                    </to>
+
+                    <container>
+                        <creationTime>${maven.build.timestamp}</creationTime>
+                        <environment>
+                            <TimeZone>Asia/Tokyo</TimeZone>
+                        </environment>
+                    </container>
+                </configuration>
             </plugin>
         </plugins>
     </build>

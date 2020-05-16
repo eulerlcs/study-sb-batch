@@ -3,12 +3,9 @@ package com.github.eulerlcs.study.sb.batch.hello.config;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
-import org.springframework.batch.core.scope.context.ChunkContext;
-import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -32,12 +29,9 @@ public class SbBatchHelloConfiguration {
 
     @Bean
     public Step helloStep() {
-        return this.stepBuilderFactory.get("helloStep").tasklet(new Tasklet() {
-            @Override
-            public RepeatStatus execute(StepContribution stepContribution, ChunkContext chunkContext) throws Exception {
-                log.warn("hello, eulerlcs. welcome the world of the spring boot batch!");
-                return RepeatStatus.FINISHED;
-            }
+        return this.stepBuilderFactory.get("helloStep").tasklet((stepContribution, chunkContext) -> {
+            log.warn("hello, eulerlcs. welcome the world of the spring boot batch!");
+            return RepeatStatus.FINISHED;
         }).build();
     }
 }
